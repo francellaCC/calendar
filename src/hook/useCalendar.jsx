@@ -26,11 +26,7 @@ export const useCalendar = () => {
   const [nextDaysMont, setNextDaysMonth] = useState([]);
   const [selectDate, setSelectedDay] = useState(today);
   const [showModal, setShowModal] = useState(false);
-  const [events, setEvents] = useState({
-    date: '',
-      time: '',
-      text: '',
-  });
+  const [events, setEvents] = useState([]);
   const [eventTime, setEventTime] = useState({ hours: "00", minutes: "00" });
   const [eventTex, setEventText] = useState("");
   const [hasEvent, setHasEvent] = useState(false);
