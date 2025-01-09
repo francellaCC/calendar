@@ -23,12 +23,17 @@ export const useCalendar = () => {
   const [month, setMonth] = useState("");
   const [prevMonthDay, setPrevMonthDay] = useState([]);
   const [days, setDays] = useState([]);
-  const [nextDaysMount, setNextDaysMonth] = useState([]);
+  const [nextDaysMont, setNextDaysMonth] = useState([]);
   const [selectDate, setSelectedDay] = useState(today);
   const [showModal, setShowModal] = useState(false);
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState({
+    date: '',
+      time: '',
+      text: '',
+  });
   const [eventTime, setEventTime] = useState({ hours: "00", minutes: "00" });
   const [eventTex, setEventText] = useState("");
+  const [hasEvent, setHasEvent] = useState(false);
 
   const initCalendar = () => {
     const firttsDay = new Date(year, mes, 1);
@@ -57,6 +62,17 @@ export const useCalendar = () => {
 
     let daysMonth = [];
     for (let index = 1; index <= lastDate; index++) {
+      if (events.length) {
+        console.log("no entre");
+        if (
+          index === events.date.getDay() &&
+          mes + 1 === events.date.getMonth() &&
+          year === events.date.getFullYear()
+        ) {
+          console.log("no entre");
+          setHasEvent(true);
+        }
+      }
       if (
         index === new Date().getDate() &&
         year === new Date().getFullYear() &&
@@ -76,6 +92,7 @@ export const useCalendar = () => {
     setDays(daysMonth);
 
     let nextDay = [];
+    console.log(nextDay);
     for (let index = 1; index < nextDays; index++) {
       nextDay.push(index);
     }
@@ -120,6 +137,7 @@ export const useCalendar = () => {
     setEventText("");
     setEventTime({ hours: "00", minutes: "00" });
     setShowModal(false);
+   
   };
   function prevMonth() {
     let newMonth = mes - 1;
@@ -142,12 +160,21 @@ export const useCalendar = () => {
     initCalendar();
   }
 
+  const showEvent = (date) => {
+    if (
+      date === events.date.getDay() &&
+      mes + 1 === events.date.getMonth() &&
+      year === events.date.getFullYear()
+    ) {
+    }
+  };
+
   return {
     month,
     initCalendar,
     prevMonthDay,
     days,
-    nextDaysMount,
+    nextDaysMont,
     nextMonth,
     prevMonth,
     showModal,
@@ -157,5 +184,8 @@ export const useCalendar = () => {
     setEventTime,
     eventTex,
     setEventText,
+    events,
+    hasEvent,
+    handleEventsSubmit,
   };
 };

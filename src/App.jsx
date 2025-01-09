@@ -8,7 +8,7 @@ function App() {
     initCalendar,
     prevMonthDay,
     days,
-    nextDaysMount,
+    nextDaysMont,
     nextMonth,
     prevMonth,
     showModal,
@@ -18,6 +18,9 @@ function App() {
     setEventTime,
     eventTex,
     setEventText,
+    events,
+    hasEvent,
+    handleEventsSubmit,
   } = useCalendar();
 
   useEffect(() => {
@@ -25,8 +28,9 @@ function App() {
     console.log("aja");
   }, []);
 
+  console.log(events.date.getDay())
   return (
-    <>
+    <div className="container">
       <div className="calendar">
         <div>
           <h2>Calendar</h2>
@@ -60,25 +64,22 @@ function App() {
         </div>
         <div className="calendar_days">
           {prevMonthDay.map((prevDay) => (
-            <div  className="day prev_date">
-              {prevDay}
-            </div>
+            <div className="day prev_date">{prevDay}</div>
           ))}
           {days.map((day) => (
             <div
               onClick={() => handleDayClick(day.day)}
-              className={`${day.isToday ? "today" : ""} day`}
+              className={`${day.isToday ? "today" : ""} day  ${hasEvent ? 'event' : ''}`}
             >
               {day.day}
             </div>
           ))}
-          {nextDaysMount.map((nextDay) => (
-            <div  className="day next_date">
-              {nextDay}
-            </div>
+          {nextDaysMont.map((nextDay) => (
+            <div className="day next_date">{nextDay}</div>
           ))}
         </div>
       </div>
+
       {showModal && (
         <div className="modal">
           <div>
@@ -94,18 +95,51 @@ function App() {
                   <label htmlFor="hour" className="modal_element_subtitle">
                     Time:{" "}
                   </label>
-                  <input type="number" name="hours" id=""  min={0} max={24} value={eventTime.hours} onChange={(e) => setEventTime({...eventTime, hours: e.target.value})}/>
-                  <input type="number" name="minutes" id="" min={0} max={60} value={eventTime.minutes} onChange={(e) => setEventTime({...eventTime, minutes: e.target.value})} />
+                  <input
+                    type="number"
+                    name="hours"
+                    id=""
+                    min={0}
+                    max={24}
+                    value={eventTime.hours}
+                    onChange={(e) =>
+                      setEventTime({ ...eventTime, hours: e.target.value })
+                    }
+                  />
+                  <input
+                    type="number"
+                    name="minutes"
+                    id=""
+                    min={0}
+                    max={60}
+                    value={eventTime.minutes}
+                    onChange={(e) =>
+                      setEventTime({ ...eventTime, minutes: e.target.value })
+                    }
+                  />
                 </div>
                 <div className="modal_element_note">
                   <label htmlFor="eventTex" className="modal_element_subtitle">
                     Notes:{" "}
                   </label>
-                  <textarea name="eventTex" id="" value={eventTex} onChange={(e) => }></textarea>
+                  <textarea
+                    name="eventTex"
+                    id=""
+                    value={eventTex}
+                    onChange={(e) => {
+                      if (e.target.value.length <= 60) {
+                        setEventText(e.target.value);
+                      }
+                    }}
+                  ></textarea>
                 </div>
               </div>
               <div>
-                <button className="modal_button_save" type="button">
+                <button
+                  className="modal_button_save"
+                  type="button"
+                  onClick={() => handleEventsSubmit()}
+                >
                   Guardar Tarea
                 </button>
               </div>
@@ -113,7 +147,27 @@ function App() {
           </div>
         </div>
       )}
-    </>
+      <div className="conteiner_events">
+        <div className="events">
+          <div className="events_header">
+            <h2 className="events_header_title">Eventos</h2>
+          </div>
+
+          {events.length ?
+            events.map((item) => (
+              <div className="events_content">
+                <div className="events_date">
+                  {/* <h3>{item.date}</h3> */}
+                  <p>{item.time}</p>
+                </div>
+                <div className="events_text">
+                  <p>{item.text}</p>
+                </div>
+              </div>
+            )) : <p>No hay eventos</p>}
+        </div>
+      </div>
+    </div>
   );
 }
 
